@@ -1,42 +1,42 @@
-@echo off
-title 第四面墙
+锘緻echo off
+title The Fourth Wall
 cd /d "%~dp0"
 
 echo ========================================
-echo  第四面墙
+echo  The Fourth Wall
 echo ========================================
 echo.
 
-rem ---- 1. 检查 Python ----
+rem ---- 1. Check Python ----
 where python >nul 2>nul
 if errorlevel 1 (
-    echo [错误] 没有检测到 Python。
+    echo [ERROR] Python not found.
     echo.
-    echo 请先安装 Python 3.10 或以上版本：
+    echo Please install Python 3.10 or later:
     echo   https://www.python.org/downloads/
-    echo 安装时务必勾选 "Add Python to PATH"，装完重新双击本文件。
+    echo Remember to tick "Add Python to PATH", then run this file again.
     echo.
     pause
     exit /b 1
 )
 
-rem ---- 2. 第一次运行：自动创建虚拟环境并安装依赖 ----
+rem ---- 2. First run: create venv and install dependencies ----
 if not exist "venv\Scripts\python.exe" (
-    echo [1/3] 第一次运行，正在创建虚拟环境……
+    echo [1/3] First run: creating virtual environment...
     python -m venv venv
     if errorlevel 1 (
         echo.
-        echo [错误] 创建虚拟环境失败，请检查 Python 安装是否正常。
+        echo [ERROR] Failed to create the virtual environment. Check your Python installation.
         pause
         exit /b 1
     )
     call "venv\Scripts\activate.bat"
-    echo [2/3] 正在安装依赖，第一次可能要几分钟，请耐心等待……
+    echo [2/3] Installing dependencies. This may take a few minutes on the first run...
     python -m pip install --upgrade pip
     python -m pip install -r requirements.txt
     if errorlevel 1 (
         echo.
-        echo [错误] 依赖安装失败，请检查网络后重新双击本文件。
+        echo [ERROR] Failed to install dependencies. Check your network and run this file again.
         pause
         exit /b 1
     )
@@ -45,8 +45,8 @@ if not exist "venv\Scripts\python.exe" (
 )
 
 echo.
-echo [3/3] 正在启动服务，几秒后会自动打开浏览器……
-echo 提示：关闭这个窗口就等于停止服务。
+echo [3/3] Starting the server. The browser will open when it is ready...
+echo Tip: closing this window stops the server.
 echo.
 
 start "" powershell -WindowStyle Hidden -Command "$deadline=(Get-Date).AddSeconds(120); while((Get-Date) -lt $deadline){ try { $r=Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:5000/' -TimeoutSec 2; if($r){ Start-Process 'http://127.0.0.1:5000/'; break } } catch { Start-Sleep -Seconds 1 } }"
