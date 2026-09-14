@@ -1,4 +1,4 @@
-# 第四面墙
+﻿# 第四面墙
 
 一个「和书里的人物对话」的平台。把书放进来、给人物写好设定，就能像和真人一样，和书中的人物聊天。
 
@@ -32,7 +32,7 @@
 **Windows 一键运行（推荐）**
 
 ```
-git clone <仓库地址>
+git clone https://github.com/Zmia0101/the-fourth-wall.git
 ```
 
 然后**双击项目里的 `启动.bat`**。第一次运行它会自动：创建虚拟环境 → 安装依赖 → 启动服务 → 打开浏览器。之后每次只要双击它，几秒就能用；关掉那个黑窗口就是停止服务。
@@ -42,8 +42,8 @@ git clone <仓库地址>
 **手动运行（其他系统）**
 
 ```
-git clone <仓库地址>
-cd book-characters-chat
+git clone https://github.com/Zmia0101/the-fourth-wall.git
+cd the-fourth-wall
 python -m venv venv
 source venv/bin/activate      # Windows 用 venv\Scripts\activate
 pip install -r requirements.txt
