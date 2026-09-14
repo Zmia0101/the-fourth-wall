@@ -1,0 +1,11 @@
+{
+  "title": "你好",
+  "author": "Mia",
+  "description": "欢迎来到“第四面墙”！",
+  "use_content_in_chat": true,
+  "use_chapter_retrieval": false,
+  "theme": "default",
+  "locked": true,
+  "show_in_studio": true,
+  "created_at": 1789093264
+}

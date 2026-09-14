@@ -1,0 +1,8 @@
+{
+    "title": "红楼梦",
+    "author": "曹雪芹",
+    "description": "中国古典四大名著之一",
+    "created_at": 1789093300,
+    "theme": "theme-gufeng",
+    "use_chapter_retrieval": true
+}

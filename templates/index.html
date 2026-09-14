@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四面墙</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <section class="hero" id="hero">
+        <div class="hero-text">壁炉里的火正旺，书架上的灵魂在窃窃私语。<br>你想翻开哪一段传奇？</div>
+        <button class="hero-login-bubble" id="hero-login-bubble" type="button">登录</button>
+        <div class="hero-user hidden" id="hero-user"></div>
+        <div class="silhouette-hotspot" id="silhouette-hotspot"></div>
+        <div class="hero-bubbles" id="hero-bubbles">
+            <button class="hero-bubble left" id="hero-start-chat" type="button">开始对话</button>
+            <button class="hero-bubble right" id="hero-start-create" type="button">开始创作</button>
+        </div>
+        <div class="hero-hint">内容由AI生成，请仔细甄别</div>
+    </section>
+
+    <div class="container">
+        <!-- 左侧：书架 -->
+        <div class="sidebar">
+            <button class="back-btn" id="back-btn" type="button">← 返回</button>
+            <div class="shelf-wrap">
+                <div class="shelf-scroll" id="shelf-viewport"></div>
+            </div>
+            <div class="sidebar-tools">
+                <div class="tools-row" id="tools-normal">
+                    <button id="new-chat-btn" class="mini-btn" disabled>＋ 新对话</button>
+                    <button id="group-chat-btn" class="mini-btn">👥 群聊</button>
+                </div>
+                <div class="tools-row hidden" id="tools-studio">
+                    <button id="new-book-btn" class="mini-btn">＋ 新建作品</button>
+                    <button id="manage-books-btn" class="mini-btn">管理作品</button>
+                </div>
+                <div class="conversation-header">最近对话</div>
+                <div id="conversation-list" class="conversation-list"></div>
+            </div>
+        </div>
+
+        <!-- 右侧：对话窗口 -->
+        <div class="chat-panel" id="chat-panel">
+            <div class="chat-header" id="chat-header">
+                <span>请从左侧选择一本书</span>
+            </div>
+            <div class="character-bar" id="character-bar"></div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="welcome-msg">
+                    👋 欢迎来到书籍人物世界！<br>
+                    选择左侧的书籍和人物，开始你的对话吧。
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="输入你想说的话..." disabled>
+                <button id="send-btn" disabled>发送</button>
+            </div>
+            <div class="chat-disclaimer">内容由AI生成，请仔细甄别</div>
+        </div>
+    </div>
+
+    <div id="login-modal" class="modal-overlay hidden">
+        <div class="modal modal-login">
+            <div class="modal-header">
+                <span id="login-title">登录</span>
+                <button class="modal-close" data-close="login-modal" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-field">
+                    <label for="auth-username">用户名</label>
+                    <input type="text" id="auth-username" autocomplete="username">
+                </div>
+                <div class="modal-field">
+                    <label for="auth-password">密码</label>
+                    <input type="password" id="auth-password" autocomplete="current-password">
+                </div>
+                <div class="modal-hint" id="auth-error"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="auth-toggle" type="button">去注册</button>
+                <button class="btn-primary" id="auth-submit" type="button">登录</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="logout-modal" class="modal-overlay hidden">
+        <div class="modal modal-login">
+            <div class="modal-header">
+                <span>退出登录</span>
+                <button class="modal-close" data-close="logout-modal" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-hint">是否退出当前账号？</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="logout-cancel" type="button">取消</button>
+                <button class="btn-primary" id="logout-confirm" type="button">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal modal-settings">
+            <div class="modal-header">
+                <span>LLM 设置（使用你自己的 API Key）</span>
+                <button class="modal-close" data-close="settings-modal" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-field">
+                    <label for="settings-api-key">API Key</label>
+                    <input type="password" id="settings-api-key" autocomplete="off" placeholder="留空则不修改">
+                    <div class="modal-hint" id="settings-key-hint"></div>
+                </div>
+                <div class="modal-field">
+                    <label for="settings-base-url">Base URL（可选，默认 DeepSeek）</label>
+                    <input type="text" id="settings-base-url" placeholder="https://api.deepseek.com">
+                </div>
+                <div class="modal-field">
+                    <label for="settings-model">模型（可选，默认 deepseek-chat）</label>
+                    <input type="text" id="settings-model" placeholder="deepseek-chat">
+                </div>
+                <div class="modal-hint" id="settings-error"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="settings-clear-btn" type="button">清除我的 API Key</button>
+                <button class="btn-primary" id="settings-save-btn" type="button">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="studio-modal" class="modal-overlay hidden">
+        <div class="modal modal-studio">
+            <div class="modal-header">
+                <span id="studio-title">我的创作</span>
+                <button class="modal-close" data-close="studio-modal" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="studio-list-view">
+                    <div class="studio-account">
+                        <span id="studio-user">未登录</span>
+                        <button id="studio-settings-btn" class="auth-btn hidden" type="button">⚙️ 设置</button>
+                        <button id="studio-logout-btn" class="auth-btn hidden" type="button">退出</button>
+                    </div>
+                    <button class="btn-primary studio-new-btn" id="studio-new-btn" type="button">＋ 新建作品</button>
+                    <div id="studio-list"></div>
+                </div>
+                <div id="studio-form-view" class="hidden">
+                    <div class="modal-field">
+                        <label for="book-title">书名</label>
+                        <input type="text" id="book-title">
+                    </div>
+                    <div class="modal-field">
+                        <label for="book-author">作者</label>
+                        <input type="text" id="book-author">
+                    </div>
+                    <div class="modal-field">
+                        <label for="book-desc">简介</label>
+                        <textarea id="book-desc" rows="3"></textarea>
+                    </div>
+                    <div class="modal-field">
+                        <label>书籍封面（可上传图片；不上传就显示书名）</label>
+                        <div class="cover-editor">
+                            <img id="cover-preview" class="cover-preview hidden" alt="">
+                            <div class="cover-editor-actions">
+                                <button class="btn-secondary" id="upload-cover-btn" type="button">上传封面</button>
+                                <button class="btn-secondary" id="remove-cover-btn" type="button">移除封面</button>
+                            </div>
+                            <input type="file" id="cover-file-input" accept="image/*" class="hidden">
+                        </div>
+                    </div>
+                    <div class="modal-field">
+                        <label for="book-content">书籍正文（粘贴或上传你写的书，作为创作人物的参考）</label>
+                        <textarea id="book-content" rows="8"></textarea>
+                        <div class="book-content-actions">
+                            <button class="btn-secondary" id="upload-book-btn" type="button">上传文本文件（.txt / .md）</button>
+                            <input type="file" id="book-file-input" accept=".txt,.md,.markdown,text/plain" class="hidden">
+                        </div>
+                    </div>
+                    <div class="modal-field">
+                        <label class="check-label">
+                            <input type="checkbox" id="use-content-check">
+                            对话时参考书籍正文（开启后，人物聊天会结合你的书内容/摘要回答）
+                        </label>
+                    </div>
+                    <div class="modal-field">
+                        <label class="check-label">
+                            <input type="checkbox" id="use-chapter-retrieval-check">
+                            对话时检索章节内容（适用于分章节的书，如 chapters 文件夹）
+                        </label>
+                    </div>
+                    <div class="modal-field">
+                        <label for="book-summary">对话参考摘要（生成后聊天会优先使用它，减少字数）</label>
+                        <textarea id="book-summary" rows="5" readonly placeholder="尚未生成摘要，可点击下方按钮生成"></textarea>
+                        <div class="book-content-actions">
+                            <button class="btn-secondary" id="generate-summary-btn" type="button">生成 / 更新摘要</button>
+                        </div>
+                    </div>
+                    <div class="modal-field">
+                        <label>人物设定（作者可自由撰写每个人物的形象设定）</label>
+                        <div id="char-editor-list"></div>
+                        <button class="btn-secondary add-char-btn" id="add-char-btn" type="button">＋ 添加人物</button>
+                    </div>
+                    <div class="modal-hint" id="studio-error"></div>
+                    <div class="studio-form-actions">
+                        <button class="btn-secondary" id="studio-back-btn" type="button">返回列表</button>
+                        <button class="btn-primary" id="studio-save-btn" type="button">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="book-view-modal" class="modal-overlay hidden">
+        <div class="modal modal-book-view">
+            <div class="modal-header">
+                <span id="book-view-title">书籍正文</span>
+                <button class="modal-close" data-close="book-view-modal" type="button">×</button>
+            </div>
+            <div class="modal-body book-view-body">
+                <div class="book-view-meta" id="book-view-meta"></div>
+                <div class="book-view-summary" id="book-view-summary"></div>
+                <div class="book-view-content" id="book-view-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chapters-modal" class="modal-overlay hidden">
+        <div class="modal modal-chapters">
+            <div class="modal-header">
+                <span id="chapters-title">章节阅读</span>
+                <button class="modal-close" data-close="chapters-modal" type="button">×</button>
+            </div>
+            <div class="modal-body chapters-body">
+                <div class="chapters-sidebar" id="chapters-list"></div>
+                <div class="chapters-content" id="chapter-content">
+                    <div class="chapter-empty">请从左侧选择章节</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="group-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <span>组建群聊</span>
+                <button id="group-modal-close" class="modal-close" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-field">
+                    <label for="group-book-select">选择书籍（群聊不能跨书）</label>
+                    <select id="group-book-select"></select>
+                </div>
+                <div class="modal-field">
+                    <label>选择人物（可多选，人数不限）</label>
+                    <div id="group-char-list" class="group-char-list"></div>
+                </div>
+                <div class="modal-hint" id="group-modal-hint">请至少选择两个人物</div>
+            </div>
+            <div class="modal-footer">
+                <button id="group-cancel" class="btn-secondary" type="button">取消</button>
+                <button id="group-confirm" class="btn-primary" type="button" disabled>开始群聊</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.__BOOKS__ = {{ books_json | safe }};
+    </script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

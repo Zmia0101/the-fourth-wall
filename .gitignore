@@ -1,0 +1,63 @@
+# 环境变量与密钥（切勿提交）
+.env*
+!.env.example
+
+# Python 虚拟环境
+venv/
+.venv/
+env/
+
+# Python 缓存与编译产物
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 依赖与构建产物
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# 编辑器与 IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+Desktop.ini
+desktop.ini
+
+# 测试与缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.pyre/
+.hypothesis/
+.ipynb_checkpoints/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.log
+logs/
+*.tmp
+*.bak
+.cache/
+
+# 数据库（本项目用 JSON，避免以后引入数据库时误提交）
+*.sqlite
+*.sqlite3
+*.db
+
+# 用户数据与创作内容（本地运行时生成）
+data/
+userbooks/
+backups/
+_update_backup/
