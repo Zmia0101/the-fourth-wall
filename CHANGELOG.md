@@ -37,5 +37,5 @@
 
 - 用户自带 API Key，不再使用平台方额度
 - 数据全部本地存储（`data/`、`userbooks/`），更新代码不影响数据
-- Windows 提供 `启动.bat` 与 `更新.bat`
+- Windows 提供 `start.bat` 与 `update.bat`
 - 内置书《你好》（Mia）作为平台使用手册，在「开始对话」和「开始创作」两个书架里都会显示

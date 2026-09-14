@@ -1,4 +1,4 @@
-﻿# 第四面墙
+# 第四面墙
 
 一个「和书里的人物对话」的平台。把书放进来、给人物写好设定，就能像和真人一样，和书中的人物聊天。
 
@@ -35,7 +35,7 @@
 git clone https://github.com/Zmia0101/the-fourth-wall.git
 ```
 
-然后**双击项目里的 `启动.bat`**。第一次运行它会自动：创建虚拟环境 → 安装依赖 → 启动服务 → 打开浏览器。之后每次只要双击它，几秒就能用；关掉那个黑窗口就是停止服务。
+然后**双击项目里的 `start.bat`**。第一次运行它会自动：创建虚拟环境 → 安装依赖 → 启动服务 → 打开浏览器。之后每次只要双击它，几秒就能用；关掉那个黑窗口就是停止服务。
 
 如果提示找不到 Python，说明电脑上还没装，去 <https://www.python.org/downloads/> 装一个 3.10 以上版本，安装时记得勾选 **Add Python to PATH**。
 
@@ -75,9 +75,9 @@ backups/     删除前的自动备份
 所以更新只需要两步：
 
 1. 拉取最新代码：`git pull`
-2. 重启程序：关掉运行窗口，重新双击 `启动.bat`
+2. 重启程序：关掉运行窗口，重新双击 `start.bat`
 
-Windows 上也可以直接双击 **`更新.bat`**：它会先把你上面三个数据目录各备份一份到 `_update_backup/`，再执行 `git pull`，最后补装可能新增的依赖。万一 `git pull` 失败，数据也在 `_update_backup/` 里，不会丢。
+Windows 上也可以直接双击 **`update.bat`**：它会先把你上面三个数据目录各备份一份到 `_update_backup/`，再执行 `git pull`，最后补装可能新增的依赖。万一 `git pull` 失败，数据也在 `_update_backup/` 里，不会丢。
 
 > **前提**：项目要用 `git clone` 方式获取（不是 GitHub 上点 "Download ZIP" 下载的），并且电脑上装了 [Git](https://git-scm.com/downloads)。脚本会自动检查这两点，不满足时会给出中文提示。
 >
@@ -93,7 +93,7 @@ git tag                 # 看看有哪些版本可选
 git checkout v0.1.0     # 切到你要的那个版本
 ```
 
-切换之后，关掉运行窗口、重新双击 `启动.bat` 即可。你的数据（`data/`、`userbooks/`、`backups/`）不受影响。想回到最新代码：`git checkout main`
+切换之后，关掉运行窗口、重新双击 `start.bat` 即可。你的数据（`data/`、`userbooks/`、`backups/`）不受影响。想回到最新代码：`git checkout main`
 
 > **提示**：目前项目还没有发布过任何版本标签，所以 `git tag` 会列不出东西，`git checkout v0.1.0` 也会报 `pathspec 'v0.1.0' did not match`——这属于正常情况，等有了正式发布的版本再用即可。具体有哪些版本可选，以 `git tag` 的输出、或 GitHub 仓库 Releases 页面列出的为准。
 
@@ -105,7 +105,7 @@ git checkout v0.1.0     # 切到你要的那个版本
 | `userbooks/` | 用户创作的书 | 不会 |
 | `data/` | 账号、API Key | 不会 |
 | `backups/` | 删除前的自动备份 | 不会 |
-| `_update_backup/` | `更新.bat` 更新前的数据备份 | 不会 |
+| `_update_backup/` | `update.bat` 更新前的数据备份 | 不会 |
 | `.env` | 环境变量 | 不会 |
 | `venv/` | Python 虚拟环境 | 不会 |
 
@@ -116,7 +116,7 @@ git checkout v0.1.0     # 切到你要的那个版本
 ```
 app.py                 后端：路由、人物设定读取、对话、创作、备份
 requirements.txt       依赖
-启动.bat / 更新.bat     Windows 一键启动 / 更新
+start.bat / update.bat     Windows 一键启动 / 更新
 books/                 内置书
   hello/               你好（Mia，平台使用手册）
   hongloumeng/         红楼梦（含 80 回章节）
