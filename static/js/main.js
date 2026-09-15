@@ -37,6 +37,7 @@ const loginModal = document.getElementById('login-modal');
 const loginTitle = document.getElementById('login-title');
 const authUsername = document.getElementById('auth-username');
 const authPassword = document.getElementById('auth-password');
+const authPasswordHint = document.getElementById('auth-password-hint');
 const authError = document.getElementById('auth-error');
 const authToggle = document.getElementById('auth-toggle');
 const authSubmit = document.getElementById('auth-submit');
@@ -701,6 +702,9 @@ function setAuthMode(mode) {
     loginTitle.textContent = mode === 'login' ? '登录' : '注册';
     authToggle.textContent = mode === 'login' ? '去注册' : '去登录';
     authSubmit.textContent = mode === 'login' ? '登录' : '注册';
+    authPasswordHint.textContent = mode === 'login'
+        ? ''
+        : '注册密码需包含大写字母、小写字母，以及至少 6 个数字';
     authError.textContent = '';
 }
 
@@ -783,7 +787,7 @@ async function openSettings() {
         if (res.ok) {
             settingsKeyHint.textContent = data.api_key_set
                 ? '当前已设置：' + (data.api_key_hint || '已设置') + '（留空则不修改）'
-                : '尚未设置，将使用服务器默认 Key';
+                : '尚未设置：需要填写你自己的 API Key 才能开始对话';
             settingsBaseUrl.value = data.base_url || '';
             settingsModel.value = data.model || '';
         }

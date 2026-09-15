@@ -149,6 +149,22 @@ def verify_password(password, salt_hex, dk_hex):
     return secrets.compare_digest(dk.hex(), dk_hex)
 
 
+# 注册密码规则：至少 6 个数字，且同时包含大写字母和小写字母
+PASSWORD_MIN_DIGITS = 6
+
+
+def check_password_strength(password):
+    """校验注册密码；合规返回 None，不合规返回给用户看的错误信息。"""
+    digits = sum(1 for ch in password if '0' <= ch <= '9')
+    if digits < PASSWORD_MIN_DIGITS:
+        return f'密码至少需要 {PASSWORD_MIN_DIGITS} 个数字，且同时包含大写字母和小写字母'
+    if not any(ch.isupper() for ch in password):
+        return '密码还需要包含至少 1 个大写字母'
+    if not any(ch.islower() for ch in password):
+        return '密码还需要包含至少 1 个小写字母'
+    return None
+
+
 def load_users():
     return load_json(USERS_FILE, {})
 
@@ -681,8 +697,9 @@ def register():
     password = data.get('password') or ''
     if not USERNAME_RE.match(username):
         return jsonify({'error': '用户名只能包含中英文、数字和下划线，长度 1-32'}), 400
-    if len(password) < 4:
-        return jsonify({'error': '密码至少 4 位'}), 400
+    password_problem = check_password_strength(password)
+    if password_problem:
+        return jsonify({'error': password_problem}), 400
     users = load_users()
     if username in users:
         return jsonify({'error': '该用户名已存在'}), 409
