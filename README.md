@@ -1,4 +1,4 @@
-# 第四面墙
+﻿# 第四面墙
 
 一个「和书里的人物对话」的平台。把书放进来、给人物写好设定，就能像和真人一样，和书中的人物聊天。
 
@@ -81,7 +81,7 @@ backups/     删除前的自动备份
 
 Windows 上也可以直接双击 **`update.bat`**：它会先把你上面三个数据目录各备份一份到 `_update_backup/`，再执行 `git pull`，最后补装可能新增的依赖。万一 `git pull` 失败，数据也在 `_update_backup/` 里，不会丢。
 
-> **前提**：项目要用 `git clone` 方式获取（不是 GitHub 上点 "Download ZIP" 下载的），并且电脑上装了 [Git](https://git-scm.com/downloads)。脚本会自动检查这两点，不满足时会给出中文提示。
+> **前提**：项目要用 `git clone` 方式获取（不是 GitHub 上点 "Download ZIP" 下载的），并且电脑上装了 [Git](https://git-scm.com/downloads)。脚本会自动检查这两点，不满足时会给出英文提示。
 >
 > 如果你是 ZIP 下载的，没有 `.git` 文件夹，那就手动更新：下载最新版解压到新文件夹，再把旧版里的 `data/`、`userbooks/`、`backups/` 三个文件夹拷过去，你的账号和作品就都在。
 
